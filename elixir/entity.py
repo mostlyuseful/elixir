@@ -13,7 +13,7 @@ import sqlalchemy
 from sqlalchemy import Table, Column, Integer, desc, ForeignKey, and_, \
                        ForeignKeyConstraint
 from sqlalchemy.orm import MapperExtension, mapper, object_session, \
-                           EXT_CONTINUE, polymorphic_union, ScopedSession, \
+                           EXT_CONTINUE, polymorphic_union, scoped_session, \
                            ColumnProperty
 from sqlalchemy.sql import ColumnCollection
 
@@ -453,13 +453,13 @@ class EntityDescriptor(object):
         # do the mapping
         if self.session is None:
             self.entity.mapper = mapper(self.entity, *args, **kwargs)
-        elif isinstance(self.session, ScopedSession):
+        elif isinstance(self.session, scoped_session):
             session_mapper = session_mapper_factory(self.session)
             self.entity.mapper = session_mapper(self.entity, *args, **kwargs)
         else:
             raise Exception("Failed to map entity '%s' with its table or "
                             "selectable. You can only bind an Entity to a "
-                            "ScopedSession object or None for manual session "
+                            "scoped_session object or None for manual session "
                             "management."
                             % self.entity.__name__)
 
